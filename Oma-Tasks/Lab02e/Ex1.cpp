@@ -1,12 +1,19 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <cctype>
 
 int main() {
     std::string line;
     while (true) {
         std::cout << "Enter a line with numbers or \"stop\": ";
         std::getline(std::cin, line);
+
+        // Convert to lowercase.
+        std::transform(line.begin(), line.end(), line.begin(), [](unsigned char c) { // This shit is unreadable...
+            return std::tolower(c);
+        });
 
         if (line.substr(0, 4) == "stop") {
             break;
