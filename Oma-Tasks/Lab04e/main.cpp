@@ -3,21 +3,28 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <iostream>
+#include <sstream>
+#include <string>
 
-class House {
+class House
+{
 public:
     House() {}
 
-    House(const std::string& address, double area, int price)
+    House(const std::string &address, double area, int price)
         : address(address), area(area), price(price) {}
 
-    friend std::ostream& operator<<(std::ostream& os, const House& house) {
+    friend std::ostream &operator<<(std::ostream &os, const House &house)
+    {
         os << house.address << " " << house.area << " " << house.price;
         return os;
     }
 
-    friend std::istream& operator>>(std::istream& is, House& house) {
-        while (!(is >> house.address >> house.area >> house.price) || house.area <= 0 || house.price < 0) {
+    friend std::istream &operator>>(std::istream &is, House &house)
+    {
+        while (!(is >> house.address >> house.area >> house.price) || house.area <= 0 || house.price < 0)
+        {
             std::cout << "Invalid input. Please enter valid values for area and price: ";
             is.clear();
             is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -25,27 +32,38 @@ public:
         return is;
     }
 
-    bool operator<(const House& other) const {
-        if (area == 0.0 && other.area == 0.0) {
+    bool operator<(const House &other) const
+    {
+        if (area == 0.0 && other.area == 0.0)
+        {
             return price < other.price; // both prices are zero
-        } else if (area == 0.0) {
+        }
+        else if (area == 0.0)
+        {
             return false; // base obj area = 0, so not less.
-        } else if (other.area == 0.0) {
+        }
+        else if (other.area == 0.0)
+        {
             return true; // other obj area = 0, so less.
-        } else {
+        }
+        else
+        {
             return price / area < other.price / other.area;
         }
     }
 
-    void setAddress(const std::string& address) {
+    void setAddress(const std::string &address)
+    {
         this->address = address;
     }
 
-    void setArea(double area) {
+    void setArea(double area)
+    {
         this->area = area;
     }
 
-    void setPrice(int price) {
+    void setPrice(int price)
+    {
         this->price = price;
     }
 
@@ -55,18 +73,31 @@ private:
     int price;
 };
 
-// turn into class method???
-void getInput(std::string& address, double& area, int& price) {
-    while (!(std::cin >> address >> area >> price) || area <= 0 || price < 0) {
-        std::cout << "Invalid input. Please enter valid values for area and price: ";
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
+void removeSpecials(std::string &str)
+{
+    str.erase(std::remove_if(str.begin(), str.end(), [](char c)
+                             { return !std::isalnum(c); }),
+              str.end());
 }
 
-int main() {
-    std::vector<House> houses;
+// turn into class method???
+void getInput(std::string &address, double &area, int &price)
+{
+    do{
+    std::cout << "Enter house information (address, area, price): ";
+    std::string userinput;
+    std::getline(std::cin, address, ',');
+    std::getline(std::cin, userinput, ',');
+    area = std::stod(userinput);
+    std::getline(std::cin, userinput, '\n');
+    price = std::stoi(userinput);
+    }
+    
+}
 
+int main()
+{
+    std::vector<House> houses;
 
     std::string address;
     double area;
@@ -108,7 +139,8 @@ int main() {
     std::sort(houses.begin(), houses.end());
 
     // and print the house information one house per line.
-    for (const auto& house : houses) {
+    for (const auto &house : houses)
+    {
         std::cout << house << std::endl;
     }
 
