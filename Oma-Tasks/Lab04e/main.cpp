@@ -55,6 +55,7 @@ private:
     int price;
 };
 
+// turn into class method???
 void getInput(std::string& address, double& area, int& price) {
     while (!(std::cin >> address >> area >> price) || area <= 0 || price < 0) {
         std::cout << "Invalid input. Please enter valid values for area and price: ";
