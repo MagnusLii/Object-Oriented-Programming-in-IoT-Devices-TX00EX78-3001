@@ -32,7 +32,7 @@ int main() {
     std::cout << "Absolute path to the file: " << fs::absolute(filePath) << std::endl;
     outputFile << "Absolute path to the file: " << fs::absolute(filePath) << std::endl;
 
-    std::cout << "\n" << std::endl;
+    std::cout << "\n" << std::endl; // to make terminal readable
 
     // Print vector
     std::cout << "Content of the string vector:\n";
