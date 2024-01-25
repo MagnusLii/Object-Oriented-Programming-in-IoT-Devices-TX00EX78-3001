@@ -82,13 +82,11 @@ void removeSpecials(std::string &str)
 void getInput(std::string &address, double &area, int &price)
 {
     bool done = false;
-    
+
     while (!done)
     {
         try
         {
-            
-            
             std::string userinput;
             std::getline(std::cin, userinput);
             size_t lastDelimiterPos = userinput.rfind(' ');
