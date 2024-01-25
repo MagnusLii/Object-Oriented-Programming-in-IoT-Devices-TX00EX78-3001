@@ -7,6 +7,9 @@
 #include <sstream>
 #include <string>
 
+void getInput(std::string &address, double &area, int &price);
+void removeSpecials(std::string &str);
+
 class House
 {
 public:
@@ -17,18 +20,14 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const House &house)
     {
-        os << house.address << " " << house.area << " " << house.price;
+        os << "Address: " << house.address << ",  area: " << house.area << ", price: " << house.price;
         return os;
     }
 
     friend std::istream &operator>>(std::istream &is, House &house)
     {
-        while (!(is >> house.address >> house.area >> house.price) || house.area <= 0 || house.price < 0)
-        {
-            std::cout << "Invalid input. Please enter valid values for area and price: ";
-            is.clear();
-            is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
+        getInput(house.address, house.area, house.price);
+        removeSpecials(house.address);
         return is;
     }
 
@@ -76,23 +75,40 @@ private:
 void removeSpecials(std::string &str)
 {
     str.erase(std::remove_if(str.begin(), str.end(), [](char c)
-                             { return !std::isalnum(c); }),
+                             { return !std::isalnum(c) && c != ' '; }),
               str.end());
 }
 
-// turn into class method???
 void getInput(std::string &address, double &area, int &price)
 {
-    do{
-    std::cout << "Enter house information (address, area, price): ";
-    std::string userinput;
-    std::getline(std::cin, address, ',');
-    std::getline(std::cin, userinput, ',');
-    area = std::stod(userinput);
-    std::getline(std::cin, userinput, '\n');
-    price = std::stoi(userinput);
-    }
+    bool done = false;
     
+    while (!done)
+    {
+        try
+        {
+            
+            
+            std::string userinput;
+            std::getline(std::cin, userinput);
+            size_t lastDelimiterPos = userinput.rfind(' ');
+            if (lastDelimiterPos != std::string::npos)
+            {
+                size_t secondLastDelimiterPos = userinput.rfind(' ', lastDelimiterPos - 1);
+
+                address = userinput.substr(0, secondLastDelimiterPos);
+                area = std::stod(userinput.substr(secondLastDelimiterPos + 1, lastDelimiterPos - secondLastDelimiterPos - 1));
+                price = std::stoi(userinput.substr(lastDelimiterPos + 1));
+                done = true;
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Invalid input, press enter to try again." << std::endl;
+            std::cin.clear();
+            std::cout << "Enter house information (address, area, price): ";
+        }
+    }
 }
 
 int main()
@@ -107,6 +123,7 @@ int main()
     // a house by passing the information as parameters
     std::cout << "Enter house 1 information (address, area, price): ";
     getInput(address, area, price);
+    removeSpecials(address);
     houses.emplace_back(address, area, price);
 
     // Create a house using default constructor, ask user to enter the house information and use
@@ -128,11 +145,13 @@ int main()
     // 4
     std::cout << "Enter house 4 information (address, area, price): ";
     getInput(address, area, price);
+    removeSpecials(address);
     houses.emplace_back(address, area, price);
 
     // 5
     std::cout << "Enter house 5 information (address, area, price): ";
     getInput(address, area, price);
+    removeSpecials(address);
     houses.emplace_back(address, area, price);
 
     // Then sort the vector using std::sort
