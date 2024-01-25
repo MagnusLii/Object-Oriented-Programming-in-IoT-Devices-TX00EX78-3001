@@ -99,6 +99,10 @@ void getInput(std::string &address, double &area, int &price)
                 price = std::stoi(userinput.substr(lastDelimiterPos + 1));
                 done = true;
             }
+            else
+            {
+                throw std::invalid_argument("Invalid input");
+            }
         }
         catch (const std::exception &e)
         {
@@ -117,7 +121,7 @@ int main()
     double area;
     int price;
 
-    // Ask user to enter the house informa3on (address, area, price) and use constructor to create
+    // Ask user to enter the house information (address, area, price) and use constructor to create
     // a house by passing the information as parameters
     std::cout << "Enter house 1 information (address, area, price): ";
     getInput(address, area, price);
