@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-void getInput(std::string &address, double &area, int &price);
+void getInput(std::istream &inputStream, std::string &address, double &area, int &price);
 void removeSpecials(std::string &str);
 
 class House
@@ -20,13 +20,13 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const House &house)
     {
-        os << "Address: " << house.address << ",  area: " << house.area << ", price: " << house.price;
+        os << house.address << " " << house.area << " " << house.price;
         return os;
     }
 
     friend std::istream &operator>>(std::istream &is, House &house)
     {
-        getInput(house.address, house.area, house.price);
+        getInput(is, house.address, house.area, house.price);
         removeSpecials(house.address);
         return is;
     }
@@ -79,7 +79,7 @@ void removeSpecials(std::string &str)
               str.end());
 }
 
-void getInput(std::string &address, double &area, int &price)
+void getInput(std::istream &inputStream, std::string &address, double &area, int &price)
 {
     bool done = false;
 
@@ -88,8 +88,9 @@ void getInput(std::string &address, double &area, int &price)
         try
         {
             std::string userinput;
-            std::getline(std::cin, userinput);
+            std::getline(inputStream, userinput);
             size_t lastDelimiterPos = userinput.rfind(' ');
+
             if (lastDelimiterPos != std::string::npos)
             {
                 size_t secondLastDelimiterPos = userinput.rfind(' ', lastDelimiterPos - 1);
@@ -107,7 +108,8 @@ void getInput(std::string &address, double &area, int &price)
         catch (const std::exception &e)
         {
             std::cerr << "Invalid input, press enter to try again." << std::endl;
-            std::cin.clear();
+            inputStream.clear();
+            inputStream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Enter house information (address, area, price): ";
         }
     }
@@ -124,14 +126,15 @@ int main()
     // Ask user to enter the house information (address, area, price) and use constructor to create
     // a house by passing the information as parameters
     std::cout << "Enter house 1 information (address, area, price): ";
-    getInput(address, area, price);
+    getInput(std::cin, address, area, price);
     removeSpecials(address);
     houses.emplace_back(address, area, price);
 
     // Create a house using default constructor, ask user to enter the house information and use
     // seJer functions before adding the house to the vector
     std::cout << "Enter house 2 information (address, area, price): ";
-    getInput(address, area, price);
+    getInput(std::cin, address, area, price);
+    removeSpecials(address);
     House house2;
     house2.setAddress(address);
     house2.setArea(area);
@@ -146,13 +149,13 @@ int main()
 
     // 4
     std::cout << "Enter house 4 information (address, area, price): ";
-    getInput(address, area, price);
+    getInput(std::cin, address, area, price);
     removeSpecials(address);
     houses.emplace_back(address, area, price);
 
     // 5
     std::cout << "Enter house 5 information (address, area, price): ";
-    getInput(address, area, price);
+    getInput(std::cin, address, area, price);
     removeSpecials(address);
     houses.emplace_back(address, area, price);
 
