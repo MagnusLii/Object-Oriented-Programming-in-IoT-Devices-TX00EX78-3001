@@ -20,7 +20,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const House &house)
     {
-        os << house.address << " " << house.area << " " << house.price;
+        os << house.address << " " << house.area << " " << house.price << std::endl;
         return os;
     }
 
@@ -79,6 +79,7 @@ void removeSpecials(std::string &str)
               str.end());
 }
 
+
 void getInput(std::istream &inputStream, std::string &address, double &area, int &price)
 {
     bool done = false;
@@ -107,6 +108,7 @@ void getInput(std::istream &inputStream, std::string &address, double &area, int
         }
         catch (const std::exception &e)
         {
+            // Instead of prints, flags should be raised on the input stream.
             std::cerr << "Invalid input, press enter to try again." << std::endl;
             inputStream.clear();
             inputStream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -114,6 +116,7 @@ void getInput(std::istream &inputStream, std::string &address, double &area, int
         }
     }
 }
+
 
 int main()
 {
@@ -163,10 +166,13 @@ int main()
     std::sort(houses.begin(), houses.end());
 
     // and print the house information one house per line.
+    std::stringstream ss;
     for (const auto &house : houses)
     {
-        std::cout << house << std::endl;
+        //std::cout << house;
+        ss << house;
     }
 
+    
     return 0;
 }
