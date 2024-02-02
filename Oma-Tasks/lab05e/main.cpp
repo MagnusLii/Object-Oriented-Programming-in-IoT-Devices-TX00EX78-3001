@@ -30,9 +30,9 @@ private:
 void antiLoopFunction() {
     std::string userinput;
 
-    LottoNumGen lottoGenerator(1, 10); // 1-40
-    LottoNumGen vikingLottoGenerator(1, 10); // 1-48
-    LottoNumGen eurojackpotGenerator(1, 10); // 1-50
+    LottoNumGen lottoGenerator(1, 40); // 1-40
+    LottoNumGen vikingLottoGenerator(1, 48); // 1-48
+    LottoNumGen eurojackpotGenerator(1, 50); // 1-50
 
     // Vectors
     std::vector<int> lottoNumbers(7);
