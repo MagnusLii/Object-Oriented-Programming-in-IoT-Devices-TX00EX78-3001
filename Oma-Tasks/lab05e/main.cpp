@@ -27,6 +27,18 @@ private:
     std::default_random_engine generator;      // Random number generator
 };
 
+class IndexPrinter {
+public:
+    IndexPrinter() : index(1) {}
+
+    void operator()(int number) {
+        std::cout << "#" << index++ << ": " << number << std::endl; // Print nums
+    }
+
+private:
+    int index;
+};
+
 void antiLoopFunction() {
     std::string userinput;
 
@@ -64,10 +76,8 @@ void antiLoopFunction() {
                             std::back_inserter(matchingNumbers));
 
     std::cout << "Matching numbers" << std::endl;
-    std::for_each(matchingNumbers.begin(), matchingNumbers.end(), [](int number) {
-        static int index = 1;
-        std::cout << "#" << index++ << ": " << number << std::endl; // Print the matching numbers
-    });
+    IndexPrinter match2;
+    std::for_each(matchingNumbers.begin(), matchingNumbers.end(), match2);
 
     std::cout << "Eurojackpot: ";
     std::copy(eurojackpotNumbers.begin(), eurojackpotNumbers.end(), std::ostream_iterator<int>(std::cout, " "));
@@ -83,10 +93,8 @@ void antiLoopFunction() {
                         std::back_inserter(matchingNumbers2));
 
     std::cout << "Matching numbers in three sets" << std::endl;
-    std::for_each(matchingNumbers2.begin(), matchingNumbers2.end(), [](int number) {
-        static int index = 1;
-        std::cout << "#" << index++ << ": " << number << std::endl; // Print the matching numbers
-    });
+    IndexPrinter match3;
+    std::for_each(matchingNumbers2.begin(), matchingNumbers2.end(), match3);
 
     std::cout << "Do you want to continue? (yes/no): ";
     std::cin >> userinput; // Read user input
