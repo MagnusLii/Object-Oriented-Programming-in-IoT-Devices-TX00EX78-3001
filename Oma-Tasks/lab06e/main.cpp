@@ -110,7 +110,6 @@ void removeSpecials(std::string &str){
               str.end());
 }
 
-
 void getInput(std::istream &inputStream, std::string &address, double &area, int &price){
     bool done = false;
 
