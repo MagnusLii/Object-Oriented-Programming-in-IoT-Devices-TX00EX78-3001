@@ -64,7 +64,7 @@ public:
     void printApartmentInfo() const{
         std::cout << "Address: " << house->getAddress() << ", Apartment Number: " << apartmentNumber << std::endl;
         std::cout << "Size: " << size << " m2" << std::endl;
-        std::cout << "Monthly Rent: " << monthlyRent << std::endl;
+        std::cout << "Monthly Rent: " << monthlyRent << "$" << std::endl;
     }
 
 private:
