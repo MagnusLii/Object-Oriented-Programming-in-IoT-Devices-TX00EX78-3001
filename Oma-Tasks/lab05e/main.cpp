@@ -94,7 +94,7 @@ void antiLoopFunction() {
 
     std::cout << "Matching numbers in three sets" << std::endl;
     IndexPrinter match3;
-    std::for_each(matchingNumbers2.begin(), matchingNumbers2.end(), match3);
+    std::for_each(matchingNumbers2.begin(), matchingNumbers2.end(), IndexPrinter());
 
     std::cout << "Do you want to continue? (yes/no): ";
     std::cin >> userinput; // Read user input
