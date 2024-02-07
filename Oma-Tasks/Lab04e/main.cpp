@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void setAddress(const std::string &address)
+    void setAddress(const std::string &address)zz
     {
         this->address = address;
     }
