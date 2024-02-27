@@ -42,6 +42,7 @@ public:
 		}
 	}
 
+	// THIS IS NEW
 	void Attach(Observer *observer) override {
 		observers.push_back(observer);
 	}
@@ -54,6 +55,7 @@ public:
 
 	void interrogate() override {
 		resistance--;
+		// THIS IS NEW
 		if (resistance <= 0) {
 			Notify();
 		}
@@ -61,11 +63,12 @@ public:
 
 
 private:
-	std::vector<Observer*> observers;
+	std::vector<Observer*> observers; // THIS IS NEW
 	std::string alias;
 	int resistance;
 };
 
+// THIS IS NEW
 class Judge : public Person, public Observer {
 	public:
 	Judge(const char* name) : Person(name) {}
