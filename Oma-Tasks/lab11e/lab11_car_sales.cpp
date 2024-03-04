@@ -30,6 +30,7 @@ void Car::Read()
 {
 	// std::cout << "Enter car information" << std::endl;
 	// replace the following with your own code
+	// why????
 	model = "Seat";
 	license = (rand() % 2 ? "ZAP-" : "ZIP-") + std::to_string(rand() % 999 + 1);
 	mileage = 10000 + rand() % 10000;
@@ -46,18 +47,28 @@ std::ostream & operator<<(std::ostream & out, const Car & car)
 
 class Website {
 public:
-	explicit Website(std::string n="carweb.com") : name(std::move(n)) {}
-	~Website() { std::cout << name << " deleted" << std::endl; };
-	void add(Car *car, std::string &dealer) { listing[car] = dealer; }
-	void print(std::ostream &out = std::cout) {
+    explicit Website(std::string n = "carweb.com") : name(std::move(n)) {}
+    ~Website() { std::cout << name << " deleted" << std::endl; };
+    void add(std::shared_ptr<Car> car, std::string &dealer) {
+        listing[car] = dealer;
+    }
+    void print(std::ostream &out = std::cout) {
         out << name << std::endl;
-        for(auto [car, dealer] : listing) out << dealer << ":" << std::endl << *car;
+        for (auto &[car, dealer] : listing) {
+            if (auto carSharedPtr = car.lock()) {
+                out << dealer << ":" << std::endl << *carSharedPtr;
+            } else {
+                // if ptr is deleted.
+                out << dealer << ": D-E-L-E-T-E-D" << std::endl;
+            }
+        }
         out << name << " end of list" << std::endl;
-	}
-	void remove(Car *car) { listing.erase(car); }
+    }
+    void remove(std::shared_ptr<Car> car) { listing.erase(car); }
+
 private:
-	std::map<Car *, std::string> listing;
-	std::string name;
+    std::map<std::weak_ptr<Car>, std::string, std::owner_less<std::weak_ptr<Car>>> listing; // This is cancer...
+    std::string name;
 };
 
 class Dealer {
@@ -67,41 +78,44 @@ public:
 	~Dealer() { std::cout << name << " deleted" << std::endl; };
 	void buy();
 	void sell();
-	void add(Car *car) {
+	void add(std::shared_ptr<Car> car) {
         cars.push_back(car);
         for (auto site : sites) site->add(car, name);
     }
-	void add_site(Website *w) {
+	void add_site(std::shared_ptr<Website> w) {
         sites.push_back(w);
     }
 private:
 	std::string name;
-	std::vector<Car *> cars;
-	std::vector<Website *> sites;
+	std::vector<std::shared_ptr<Car>> cars;
+	std::vector<std::shared_ptr<Website>> sites;
 };
 
 void Dealer::buy()
 {
-	Car *car = new Car;
-	car->Read();
-	add(car);
+    std::shared_ptr<Car> car = std::make_shared<Car>();
+    car->Read();
+    add(car);
 }
 
 void Dealer::sell()
 {
-	std::cout << *this; // print my list of cars
-	std::cout << "Enter license of car you want to buy: " << std::flush;
+    std::cout << *this; // print my list of cars
+    std::cout << "Enter license of car you want to buy: " << std::flush;
 
-	std::string license;
-	std::cin >> license;
-	auto ci = std::find_if(cars.begin(), cars.end(), [&license](Car *c) {return license == c->GetLicense(); });
-	if (ci != cars.end()) {
+    std::string license;
+    std::cin >> license;
+    
+    auto ci = std::find_if(cars.begin(), cars.end(), [license](const auto& c) {return license == c->GetLicense();}); // Why is cpp like this?
+
+
+    if (ci != cars.end()) {
         // modify code so that you don't need to remove a sold car from the website
-		for (auto site : sites) site->remove(*ci);
-		cars.erase(ci);
-	}
+        //for (auto site : sites) site->remove(*ci);
+		ci->reset();
+        cars.erase(ci); // Do I still call this?
+    }
 }
-
 
 std::ostream & operator<<(std::ostream & out, const Dealer & dealer)
 {
@@ -118,16 +132,17 @@ std::ostream & operator<<(std::ostream & out, const Dealer & dealer)
 
 void car_sales()
 {
+	// who names their variables like this??
 	std::cout << "Car sales started" << std::endl;
-	auto *wa = new Website("www.autos.com");
-	auto *wb = new Website("www.bilar.com");
-	auto *a = new Dealer("Alan Aldis");
-	auto *b = new Dealer("Bill Munny");
+	auto wa = std::make_shared<Website>("www.autos.com");
+	auto wb = std::make_shared<Website>("www.bilar.com");
+	auto a = std::make_shared<Dealer>("Alan Aldis");
+	auto b = std::make_shared<Dealer>("Bill Munny");
 	{ // inner scope to make some if the pointers go out of scope before the function ends.
-        auto *wc = new Website("www.cars.com");
-		auto *c = new Dealer("Casey Ball");
-		Car *ca = new Car;
-		Car *cb = new Car;
+        auto wc = std::make_shared<Website>("www.cars.com");
+		auto c = std::make_shared<Dealer>("Casey Ball");
+		auto ca = std::make_shared<Car>();
+		auto cb = std::make_shared<Car>();
 
 		a->add_site(wa);
 		a->add_site(wb);
@@ -174,8 +189,8 @@ void car_sales()
 
 }
 
-int main(int argc, char **argv) {
-
+int main(int argc, char **argv) {  // <<<--- The hell are these??!?
+  
 	srand(time(nullptr));
 
 	car_sales();
