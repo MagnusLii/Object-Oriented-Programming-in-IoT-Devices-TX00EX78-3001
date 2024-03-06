@@ -8,11 +8,11 @@ int main(int argc, char** argv) {
 
     auto sub_menu = std::make_shared<Menu>("Colors");
 
-    auto redEdit = std::make_shared<ObservableIntEdit>("Red");
-    auto blueEdit = std::make_shared<ObservableIntEdit>("Blue");
-    auto greenEdit = std::make_shared<ObservableIntEdit>("Green");
+    auto redEdit = std::make_shared<IntEditObserver>("Red");
+    auto blueEdit = std::make_shared<IntEditObserver>("Blue");
+    auto greenEdit = std::make_shared<IntEditObserver>("Green");
 
-    auto observer = std::make_shared<ObservableIntEditObserver>(redEdit.get());
+    auto observer = std::make_shared<ObserverNotifier>(redEdit.get());
     redEdit->addObserver(observer.get());
     blueEdit->addObserver(observer.get());
     greenEdit->addObserver(observer.get());

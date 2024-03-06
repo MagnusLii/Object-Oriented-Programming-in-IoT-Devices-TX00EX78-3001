@@ -25,20 +25,20 @@ public:
     virtual ~Observer() = default;
 };
 
-class ObservableIntEdit;
+class IntEditObserver;
 
-class ObservableIntEditObserver : public Observer {
+class ObserverNotifier : public Observer {
 public:
-    ObservableIntEditObserver(ObservableIntEdit* observableIntEdit);
+    ObserverNotifier(IntEditObserver* observableIntEdit);
     void notify(int value) override;
 
 private:
-    ObservableIntEdit* observableIntEdit;
+    IntEditObserver* observableIntEdit;
 };
 
-class ObservableIntEdit : public IntEdit {
+class IntEditObserver : public IntEdit {
 public:
-    explicit ObservableIntEdit(std::string menu_title);
+    explicit IntEditObserver(std::string menu_title);
     bool event(menuEvent e) override;
     void addObserver(Observer* observer);
     void removeObserver(Observer* observer);

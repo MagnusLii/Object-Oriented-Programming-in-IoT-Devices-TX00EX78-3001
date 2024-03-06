@@ -55,16 +55,16 @@ void IntEdit::show() {
     std::cout << "Value: " << value << std::endl;
 }
 
-ObservableIntEditObserver::ObservableIntEditObserver(ObservableIntEdit* observableIntEdit)
+ObserverNotifier::ObserverNotifier(IntEditObserver* observableIntEdit)
     : observableIntEdit(observableIntEdit) {}
 
-void ObservableIntEditObserver::notify(int value) {
+void ObserverNotifier::notify(int value) {
     std::cout << "Observer notified of change in " << observableIntEdit->title() << ": " << value << std::endl;
 }
 
-ObservableIntEdit::ObservableIntEdit(std::string menu_title) : IntEdit(menu_title) {}
+IntEditObserver::IntEditObserver(std::string menu_title) : IntEdit(menu_title) {}
 
-bool ObservableIntEdit::event(MenuItem::menuEvent e) {
+bool IntEditObserver::event(MenuItem::menuEvent e) {
     bool handled = IntEdit::event(e);
     if (handled) {
         notifyObservers();
@@ -72,15 +72,15 @@ bool ObservableIntEdit::event(MenuItem::menuEvent e) {
     return handled;
 }
 
-void ObservableIntEdit::addObserver(Observer* observer) {
+void IntEditObserver::addObserver(Observer* observer) {
     observers.insert(observer);
 }
 
-void ObservableIntEdit::removeObserver(Observer* observer) {
+void IntEditObserver::removeObserver(Observer* observer) {
     observers.erase(observer);
 }
 
-void ObservableIntEdit::notifyObservers() {
+void IntEditObserver::notifyObservers() {
     for (auto observer : observers) {
         observer->notify(value);
     }
