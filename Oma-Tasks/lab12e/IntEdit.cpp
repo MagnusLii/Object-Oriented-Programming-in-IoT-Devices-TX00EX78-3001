@@ -55,11 +55,11 @@ void IntEdit::show() {
     std::cout << "Value: " << value << std::endl;
 }
 
-ObserverNotifier::ObserverNotifier(IntEditObserver* observableIntEdit)
-    : observableIntEdit(observableIntEdit) {}
+ObserverNotifier::ObserverNotifier(IntEditObserver* Observer)
+    : observer(Observer) {}
 
 void ObserverNotifier::notify(int value) {
-    std::cout << "Observer notified of change in " << observableIntEdit->title() << ": " << value << std::endl;
+    std::cout << "Observer notified of change in " << observer->title() << ": " << value << std::endl;
 }
 
 IntEditObserver::IntEditObserver(std::string menu_title) : IntEdit(menu_title) {}

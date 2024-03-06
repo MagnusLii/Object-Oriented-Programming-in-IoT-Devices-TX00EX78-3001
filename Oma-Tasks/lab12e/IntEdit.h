@@ -33,7 +33,7 @@ public:
     void notify(int value) override;
 
 private:
-    IntEditObserver* observableIntEdit;
+    IntEditObserver* observer;
 };
 
 class IntEditObserver : public IntEdit {
